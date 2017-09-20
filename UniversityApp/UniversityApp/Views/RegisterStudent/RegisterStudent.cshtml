@@ -1,0 +1,85 @@
+﻿@model UniversityApp.Models.Student
+@{
+    ViewBag.Title = "RegisterStudent";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Register Student</h2>
+
+@section style{
+    <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui.theme.css" rel="stylesheet" />
+<style>
+    .field-validation-error {
+        color: red;
+        font-style: italic;
+    }
+</style>
+
+}
+
+<div>
+    <fieldset>
+
+        @using (Html.BeginForm("RegisterStudent", "RegisterStudent", FormMethod.Post))
+        {
+            <table>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Name)</td>
+                    <td>@Html.TextBoxFor(m => m.Name)</td>
+                    <td>@Html.ValidationMessageFor(m => m.Name)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Email)</td>
+                    <td>@Html.TextBoxFor(m => m.Email)</td>
+                    <td>@Html.ValidationMessageFor(m => m.Email)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.ContactNo)</td>
+                    <td>@Html.TextBoxFor(m => m.ContactNo)</td>
+                    <td>@Html.ValidationMessageFor(m => m.ContactNo)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.Date)</td>
+                    <td>@Html.TextBoxFor(m => m.Date, new {id = "datepicker"})</td>
+                    <td>@Html.ValidationMessageFor(m => m.Date)</td>
+                </tr>
+
+                <tr>
+                    <td>@Html.LabelFor(m => m.Address)</td>
+                    <td>@Html.TextAreaFor(m => m.Address)</td>
+                    <td>@Html.ValidationMessageFor(m => m.Address)</td>
+                </tr>
+                <tr>
+                    <td>@Html.LabelFor(m => m.DepartmentId)</td>
+                    <td>@Html.DropDownListFor(m => m.DepartmentId, new SelectList(ViewBag.departments, "DepartmentId", "Name"), "--Select--", "")</td>
+                    <td>@Html.ValidationMessageFor(m => m.DepartmentId)</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><input type="submit" value="Register"/></td>
+                </tr>
+            </table>
+        }
+    </fieldset>
+    @ViewBag.message
+</div>
+
+@section scripts{
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+        $(".selector").datepicker("setDate", new Date());
+        $("#datepicker").datepicker("setDate", currentDate);
+    });
+</script>
+
+}
+

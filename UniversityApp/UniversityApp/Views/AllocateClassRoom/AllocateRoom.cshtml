@@ -1,0 +1,167 @@
+﻿@model UniversityApp.Models.ClassRoom
+@{
+    ViewBag.Title = "AllocateRoom";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Allocate Class Room</h2>
+
+@section style
+{
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.timepicker.css" rel="stylesheet" />
+
+    <link href="~/Content/MvcBootstrapTimepicker.css" rel="stylesheet" />
+}
+
+
+
+@using (Html.BeginForm("AllocateRoom", "AllocateClassRoom", FormMethod.Post))
+{
+
+
+
+
+    <table>
+
+        <tr>
+            <td>
+                <label for="departmentId">Department</label>
+            </td>
+            <td>
+                <select name="DepartmentId" id="departmentId">
+                    <option value="">---Select Department---</option>
+                    @foreach (var department in ViewBag.Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="courseId">Course</label>
+            </td>
+            <td>
+                <select name="CourseId" id="courseId">
+                    @*<option value="">---Select Course---</option>
+                    @foreach (var course in ViewBag.Courses)
+                    {
+                        <option value="@course.Id">@course.Name</option>
+                    }*@
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="roomId">Room No.</label>
+            </td>
+            <td>
+                <select name="RoomId" id="roomId">
+                    <option value="">---Select Room Number---</option>
+                    @foreach (var room in ViewBag.RoomNo)
+                    {
+                        <option value="@room.Id">@room.RoomNo</option>
+                    }
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label for="dayId">Day</label>
+            </td>
+            <td>
+                <select name="Day" id="dayId">
+                    <option value="">---Select Day---</option>
+                    @foreach (var day in ViewBag.Days)
+                    {
+                        <option value="@day.DayName">@day.DayName</option>
+                    }
+                </select>
+            </td>
+            <td></td>
+        </tr>
+
+
+        <tr>
+            <td>@Html.LabelFor(m => m.FromTime)</td>
+            <td>@Html.TextBoxFor(m => m.FromTime)</td>
+            <td>@Html.ValidationMessageFor(m => m.FromTime)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(m => m.ToTime)</td>
+            <td>@Html.TextBoxFor(m => m.ToTime)</td>
+            <td>@Html.ValidationMessageFor(m => m.ToTime)</td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <td></td>
+
+            <td>
+                <input type="submit" value="Allocate">
+
+            </td>
+        </tr>
+       
+       
+    </table>
+    
+    
+     <label>@ViewBag.Message</label>
+
+
+
+}
+
+
+@section scripts
+
+{
+
+
+    <script src="~/Scripts/jquery.timepicker.min.js"></script>
+
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#FromTime').timepicker({ 'step': 5, 'minTime': "07:00am" });
+            $('#FromTime').on('focus', function () {
+                $(this).trigger('blur');
+            });
+            $('#ToTime').timepicker({ 'step': 5, 'minTime': "07:00am" });
+            $('#ToTime').on('focus', function () {
+                $(this).trigger('blur');
+            });
+
+           
+                $("#departmentId").change(function () {
+                    var deptId = $("#departmentId").val();
+                    $("#courseId").empty();
+                    $("#courseId").append('<option value="">Select</option>');
+                    var json = { departmentId: deptId };
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("GetCourseByDepartmentId", "AllocateClassRoom")',
+                        //url: '/Department/GetStudentsByDepartmentId',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(json),
+                        success: function (data) {
+                           // alert(data);
+                            $.each(data, function (key, value) {
+                                //alert(key);
+                                $("#courseId").append('<option value="' + value.Id + '">' + value.Name + '</option>');
+                                
+                            });
+                        }
+                    });
+                });
+            });
+       
+    </script>
+}

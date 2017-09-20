@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "showScheduleAndRoomAllocation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>View Class Schedule And Room Allocation Information</h2>
+
+
+
+@section style{
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <style>
+        .field-validation-error {
+            color: red;
+            font-style: italic;
+        }
+    </style>
+
+}
+<div>
+    <fieldset>
+
+        <form id="myForm" method="POST">
+
+            <table>
+                <tr>
+                    <td>
+                        <label for="departmentId">Department </label>
+                        <select id="departmentId" name="departmeentId">
+                            <option value="">--Select--</option>
+                            @foreach (var department in ViewBag.Departments)
+                            {
+                                <option value="@department.Id"> @department.Name</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+
+            </table>
+
+        </form>
+        <table id="myTable" border="1">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Name</th>
+                    <th>Schedule Info</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </fieldset>
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#myTable").DataTable();
+            $("#departmentId").change(function () {
+                var deptId = $("#departmentId").val();
+                // $("#myTable").show();
+                table.clear().draw(false);
+                $("#tableBody").empty();
+
+                var json = { departmentId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCourseScheduleByDepartmentId", "Schedule")',
+                    // url: '/Department/GetStudentsByDepartmentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        alert(data);
+
+                        $.each(data, function (key, value) {
+                            //alert(value);
+
+                            var schdeuleInfo = value.Schedule;
+                            var schedule = schdeuleInfo.split(";").join("<br/>");
+                            //$("#tableBody").append('<tr><td>' + value.StudentId + '</td><td>' + value.Name + '</td><td>' + value.DepartmentId + '</td></tr>');
+                            table.row.add([
+                                value.Code,
+                                value.Name,
+                                schedule
+                            ]).draw(false);
+
+
+
+
+
+                            //$("#myTable").append('<tr><td>' + value.Code + '</td><td>' + value.Name + '</td><td>' + h + '</td></tr>');
+
+
+                        });
+
+
+                        //$('#myTable').DataTable();
+
+
+                    }
+                });
+            });
+        });
+
+
+
+
+    </script>
+
+
+}
+
+

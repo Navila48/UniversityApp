@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewBag.Title = "Student Result";
+}
+
+<h2>Index</h2>
+
+<form method="POST" id="myform">
+    <table>
+        <tr>
+            <td>
+                <label for="RegistrationNo">Select Student Reg. No. </label>
+            </td>
+            <td>
+                <select name="StudentRegNo" id="RegistrationNo">
+                    <option value="">Select...</option>
+                    @foreach (var registration in ViewBag.Registration)
+                    {
+                        <option value="@registration">@registration</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Name</label></td>
+            <td><input type="text" id="Name" name="Name"/></td>
+        </tr>
+        <tr>
+            <td><label>Email</label></td>
+            <td><input type="text" id="Email" name="Email"/></td>
+        </tr>
+        <tr>
+            <td><label>Department</label></td>
+            <td><input type="text" id="Department" name="DeptName"/></td>
+        </tr>
+        <tr>
+            <td><label for="CourseId">Select Course</label></td>
+            <td>
+                <select name="CourseId" id="CourseId"></select>
+            </td>
+        </tr>
+        <tr>
+            <td>Select Grade Letter</td>
+            <td><select id="Grade" name="Grade">
+                <option value="">---Select---</option>
+                <option value="A+">A+</option>
+                <option value="A">A</option>
+                <option value="A-">A-</option>
+                <option value="B">B+</option>
+                <option value="B">B</option>
+                <option value="B-">B-</option>
+                <option value="C+">C+</option>
+                <option value="C">C</option>
+                <option value="C-">C-</option>
+                <option value="D+">D+</option>
+                <option value="D">D</option>
+                <option value="D-">D-</option>
+                <option value="F">F</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Submit" class="btn btn-default"/></td>
+        </tr>
+    </table>
+
+</form>
+@ViewBag.Save
+
+
+
+@section scripts
+{
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+    <script>
+        $(document).ready(function () {
+      
+            $("#RegistrationNo").change(function () {
+                var regno = $("#RegistrationNo").val();
+            
+                var json = { registrationNo: regno };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetStudentDetils", "StudentResult")',
+                  
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                       
+                        $("#Name").val(data.Name);
+                        $("#Email").val(data.Email);
+                        $("#Department").val(data.DeptName);
+                    }
+                });
+                $("#CourseId").empty();
+                $("#CourseId").append('<option value="">Select</option>');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetStudentCourse", "StudentResult")',
+
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                           // alert(key);
+                            $("#CourseId").append('<option value="' + value.CourseId + '">' + value.CourseName + '</option>');
+
+                        });
+                       
+                    }
+                });
+            });
+            $("#myform").validate({
+                rules: {
+                    StudentRegNo: "required",
+                    CourseId: "required",
+                    Grade: "required"
+                },
+                messages: {
+                    
+                    StudentRegNo: "Please Select A Student Registration Number",
+                    CourseId: "Please Select a Grade",
+                    Grade: "Please Select a Grade"
+                   
+                }
+            });
+
+
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+

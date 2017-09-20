@@ -1,0 +1,56 @@
+﻿@using UniversityApp.Models
+@model UniversityApp.Models.StudentVm
+
+
+@{
+    Layout = null;
+    StudentVm aStudentVm = ViewBag.message;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>Saved Student Info</legend>
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>@Model.Address</td>
+            </tr>
+            <tr>
+                <td>ContactNo</td>
+                <td>@Model.ContactNo</td>
+            </tr>
+            <tr>
+                <td>Registration No</td>
+                <td>@Model.RegistrationNo</td>
+            </tr>
+            <tr>
+                <td>Date</td>
+                <td>@Model.Date.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td>Department</td>
+                <td>@Model.Department</td>
+            </tr>
+        </table>
+    </fieldset>
+    <br/>
+    <a href="@Url.Action("PrintIndex",Model)"> Pdf</a>
+</div>
+</body>
+</html>

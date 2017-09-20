@@ -1,0 +1,71 @@
+﻿@model UniversityApp.Models.DepartmentHira
+@{
+    ViewBag.Title = "SaveDepartment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>SaveDepartment</h2>
+
+
+    @section style{
+    <style>
+        .field-validation-error {
+            color: red;
+            font-style: italic;
+        }
+    </style>
+    }
+
+
+        @using (Html.BeginForm("SaveDepartment", "DepartmentHira", FormMethod.Post))
+        {
+
+            <fieldset>
+
+                <legend>Save Department</legend>
+
+                <table>
+                    <tr>
+                        <td>@Html.LabelFor(m => m.Code)</td>
+                        <td>@Html.TextBoxFor(m => m.Code)</td>
+                        <td>@Html.ValidationMessageFor(m => m.Code)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.LabelFor(m => m.Name)</td>
+                        <td>@Html.TextBoxFor(m => m.Name)</td>
+                        <td>@Html.ValidationMessageFor(m => m.Name)</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+
+                        <td>
+                            <input type="submit" value="Save">
+
+                        </td>
+                    </tr>
+
+                </table>
+
+                @if (ViewBag.department != null)
+                {
+                     <label> @ViewBag.department</label>
+                    
+                }
+               
+
+                
+                
+
+            </fieldset>
+
+        }
+@section scripts{
+
+        <script src="~/Scripts/jquery-1.10.2.js"></script>
+        <script src="~/Scripts/jquery.validate.min.js"></script>
+        <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+}
+    
+    
+

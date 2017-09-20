@@ -1,0 +1,47 @@
+﻿@model UniversityApp.Models.Department
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SaveDepartment</title>
+</head>
+<body>
+<div>
+    
+        @using (Html.BeginForm("SaveDepartment", "Department", FormMethod.Post))
+{
+    <fieldset>
+        <legend>Save Department</legend>
+        <table>
+            <tr>
+                <td>@Html.LabelFor(m => m.Code)</td>
+                <td>@Html.TextBoxFor(m => m.Code)</td>
+                <td>@Html.ValidationMessageFor(m=>m.Code)</td>
+            </tr>
+            <tr>
+                <td>@Html.LabelFor(m => m.Name)</td>
+                <td>@Html.TextBoxFor(m => m.Name)</td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Save">
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   <label> @ViewBag.department</label>
+                </td>
+            </tr> 
+        </table>
+    </fieldset>
+}
+   
+</div>
+</body>
+</html>

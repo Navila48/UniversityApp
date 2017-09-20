@@ -1,0 +1,68 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UnallocateAllClassRoom</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet"/>
+    <link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+</head>
+<body>
+<div>
+    @using (Html.BeginForm("UnallocateAllClassRoom", "UnallocateClassRoom", FormMethod.Get,new{ id="unallocateForm"}))
+    {
+        <fieldset>
+            <legend>Unallocate All Classrooms</legend>
+            <div style="text-align: center">
+                <input id="unallocate" type="submit" value="Unallocate"/>
+            </div>
+  
+    
+        
+        </fieldset>
+    }
+
+</div>
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#unallocate").click(function (event) {
+                event.preventDefault();
+                $('<div title="Confirm Box"></div>').dialog({
+                    open: function (event, ui) {
+                        $(this).html("Are you sure?");
+                    },
+                    close: function () {
+                        $(this).remove();
+                    },
+                    resizable: false,
+                    height: 140,
+                    modal: true,
+                    buttons: {
+                        'Yes': function () {
+                            $("#unallocateForm").submit();
+                            //$(this).dialog('close');
+                            //$.post('url/theValueYouWantToPass');
+
+                        },
+                        'No': function () {
+                            $(this).dialog('close');
+                            //$.post('url/theOtherValueYouWantToPAss');
+                            event.preventDefault();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+   
+</body>
+</html>

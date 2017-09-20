@@ -1,0 +1,75 @@
+﻿@using UniversityApp.Models
+@model UniversityApp.Models.UnassignCourse
+@{
+    ViewBag.Title = "UnassignCourse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Unassign All Course</h2>
+
+@using (Html.BeginForm("UnassignCourse", "UnassignCourses", FormMethod.Post))
+{
+    <table>
+        <tr></tr>
+
+        <tr>
+            <td></td>
+            <td>
+
+                <input id="submit" type="submit" name="anchortag" value="Unassign"/>
+
+                @Html.ActionLink("Submit", "UnassignCourse", "UnassiagnCourses", new {@onclick = "return Submit();", id = "anchortag", FormMethod.Post})
+
+
+
+
+
+
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+
+    @Html.ActionLink("Unassign","UnassignCourse", "UnassignCourses",new { id ="unassign"  },new { onclick = "return confirm('Are you sure you wish to delete this article?');" })
+                
+            </td>
+
+
+        </tr>
+
+
+
+        <tr>
+
+            <td><label style="color: blue">@ViewBag.msg</label></td>
+        </tr>
+
+    </table>
+}
+@section scripts{
+
+ 
+
+
+    <script>
+                   $(document).ready(function () {
+                       $("#submit").click(function () {
+                           alert()
+                           var result = confirm("Are you sure ?");
+                           if (result == false) {
+                               $("#submit").submit(function (e) {
+                                   e.preventDefault();
+                               });
+                           }
+
+
+                       });
+                   });
+    </script>
+
+
+       
+}
+
+

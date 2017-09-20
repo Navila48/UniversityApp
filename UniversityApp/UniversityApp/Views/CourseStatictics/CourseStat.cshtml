@@ -1,0 +1,136 @@
+﻿
+
+@{
+    ViewBag.Title = "CourseStat";
+}
+
+@section style
+{
+
+    
+<link href="~/Content/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+}
+
+<h2>Course Statistics</h2>
+
+<form method="POST" id="myForm">
+    <table>
+        <tr>
+            <td>
+                <label for="departmentId">Select Department</label>
+            </td>
+            <td>
+                <select name="departmentId" id="departmentId">
+                    <option value="">---Select---</option>
+                    @foreach (var department in ViewBag.Departments)
+                    {
+                        <option value="@department.Id">@department.Name</option>
+                    }
+                </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <a href="@Url.Action("UrlAsPDF", "CourseStatictics")">Download ViewAsPdf</a>
+</td>
+        </tr>
+ 
+    </table>
+</form>
+
+<table id="myTable" class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name/Title</th>
+            <th>Semester</th>
+            <th>AssignTo</th>
+        </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+</table>
+
+@section scripts
+{
+   
+<script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+    
+        @*$(document).ready(function () {
+            var table = $("#myTable").DataTable();
+            $("#departmentId").change(function () {
+                var deptId = $("#departmentId").val();
+                $("#myTable").show();
+                table.clear().draw(false);
+                //$("#tableBody").empty();
+                $("#studentId").empty();
+                $("#studentId").append('<option value="">Select</option>');
+                var json = { departmentId: deptId };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetCourseStatByDepartmentId", "CourseStatictics")',
+                    //url: '/Department/GetStudentsByDepartmentId',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(json),
+                    success: function (data) {
+                        //alert(data);
+                        $.each(data, function (key, value) {
+                            //alert(key);
+                           // $("#studentId").append('<option value="' + value.StudentId + '">' + value.Name + '</option>');
+                            //$("#tableBody").append('<tr><td>' + value.StudentId + '</td><td>' + value.Name + '</td><td>' + value.DepartmentId + '</td></tr>');
+                            var status = value.Status;
+                            if (status === "Unassign") {
+                                table.row.add([
+
+                                   value.Code, value.Name, value.Semester, value.AssignTo
+                                ]).return(false);
+                            }
+                            
+                          
+                        });
+                    }
+                });
+            });
+        });*@
+    <script>
+
+
+    $(document).ready(function () {
+        $("#departmentId").change(function () {
+
+            $("#tableBody").empty();
+            var deptId = $("#departmentId").val();
+            var json = { departmentId: deptId };
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetCourseStatByDepartmentId", "CourseStatictics")',
+
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(json),
+                success: function (data) {
+
+                    $.each(data, function (key, value) {
+                        var assign = value.Status;
+                        if (assign == "Assign") {
+                            $("#myTable").append('<tr><td>' + value.Code + '</td><td>' + value.Name + '</td><td>' + value.Semester + '</td><td>' + value.AssignTo + '</td></tr>');
+                        } else {
+                            $("#myTable").append('<tr><td>' + value.Code + '</td><td>' + value.Name + '</td><td>' + value.Semester + '</td><td>Not Assigned Yet</td></tr>');
+                        }
+
+                    });
+                    $('#myTable').DataTable({
+                        
+                      
+                    });
+                }
+            });
+
+        });
+    });
+
+    </script>
+
+   
+}
+

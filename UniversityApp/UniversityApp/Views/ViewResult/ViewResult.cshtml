@@ -1,0 +1,163 @@
+﻿@using ResultManagementApp.Models
+@{
+    ViewBag.Title = "ViewResult";
+}
+
+<h2>ViewResult</h2>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Save</title>
+    <link href="~/Content/Site.css" rel="stylesheet"/>
+    <link href="~/content/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+    <style>
+        .field-validation-error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <fieldset>
+        <legend>View Result</legend>
+        <form class="form-horizontal" method="POST" id="Enroll">
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Id">Reg No</label>
+                <div class="col-sm-6">
+                    <select id="RegNo" name="RegNo" class="form-control" onchange="">
+                        <option value="">Select</option>
+
+                        @foreach (StudentMustafa student in ViewBag.Students)
+                        {
+                            <option value="@student.RegNo">@student.RegNo</option>
+                        }
+
+
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Name">Name</label>
+                <div class="col-sm-6">
+                    <input id="Name" name="Name" disabled="disabled"/>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Email">Email</label>
+                <div class="col-sm-6">
+                    <input id="Email" name="Email" disabled="disabled"/>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="DepartmentName">Department</label>
+                <div class="col-sm-6">
+                    <input id="DepartmentName" name="DepartmentName" disabled="disabled" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default" >Make PDF</button>
+                </div>
+            </div>
+
+
+        </form>
+    </fieldset>
+</div>
+    <table id="myTable" class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Course Code</th>
+                <th>Name</th>
+                <th>Grade</th>
+               
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+@section scripts{
+
+    <script src="~/scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
+        @*<script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+
+            <script src="~/Scripts/jquery.validate.js"></script>
+            <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>*@
+        <script>
+            $(document).ready(function () {
+                $("#myTable").hide();
+                var table = $("#myTable").DataTable();
+                $("#RegNo").change(function () {
+                    var id = $("#RegNo").val();
+
+
+                    $("#myTable").show();
+                   // $("#tableBody").empty();
+                    table.clear().draw(false);
+
+
+                    $("#Name").empty();
+                    $("#Email").empty();
+                    $("#DepartmentName").empty();
+                    
+                    var json = { RegNo: id };
+                    $.ajax({
+                        type: "POST",
+                        url: '/ViewResult/GetStudentDetails',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(json),
+                        success: function (data) {
+                            $("#Name").val(data.Name);
+                            $("#Email").val(data.Email);
+                            $("#DepartmentName").val(data.DepartmentName);
+
+
+                           
+                        }
+
+                    });
+
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("GetStudentAllCoursesDetailsWithRegNo", "ViewResult")',
+
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(json),
+                        success: function (data) {
+                            //alert(data);
+                            $.each(data, function (key, value) {
+
+                                $("#myTable").append('<tr><td>' + value.Code + '</td><td>' + value.CourseName + '</td><td>' + value.Grade + '</td><td>' + '</td></tr>');
+
+                               
+                                table.row.add([
+                                    value.Code, value.CourseName, value.Grade
+                                ]).draw(false);
+
+                              
+
+                            });
+                            $('#myTable').DataTable();
+                        }
+                    });
+                   
+
+                });
+                });
+
+        </script>
+    }
+</body>
+</html>
